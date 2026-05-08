@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Leaflet custom — B&W tema uyumu */
+.live-map-pin,
+.live-map-pin-car {
+  background: transparent !important;
+  border: none !important;
+}
+.leaflet-container {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  background: hsl(0 0% 96%);
+}
+.leaflet-control-zoom a {
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* Animasyonlu rota: dashOffset akışı = ilerleme hissi */
+.route-polyline-animated {
+  animation: dashflow 1.2s linear infinite;
+}
+@keyframes dashflow {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+/* Sürücü pin'inin yumuşak hareketi (interpolation step'leri arası) */
+.live-map-pin-car {
+  transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+@layer base {
+  :root {
+    /* B&W premium palette */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 6%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 6%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 6%;
+
+    --primary: 0 0% 6%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 6%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 0 0% 94%;
+    --accent-foreground: 0 0% 6%;
+
+    --destructive: 0 75% 42%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 6%;
+
+    --canvas: 0 0% 4%;
+    --surface: 0 0% 100%;
+    --surface-dark: 0 0% 8%;
+
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 6%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 0 0% 14%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 98%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: normal;
+  }
+
+  ::selection {
+    @apply bg-foreground text-background;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
+
+  /* Headings letter-spacing (Inter görünümü) */
+  .heading-display {
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+}
+
+@layer components {
+  .container-narrow {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-wide {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Mobil cihaz çerçevesi (yolcu/sürücü ekranları için) */
+  .device-frame {
+    @apply relative mx-auto w-full max-w-[400px] overflow-hidden rounded-[44px] border-[10px] border-black bg-background shadow-soft-lg;
+    aspect-ratio: 9 / 19.5;
+  }
+  .device-frame-notch {
+    @apply absolute left-1/2 top-0 z-50 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-black;
+  }
+
+  /* Skeleton shimmer */
+  .skeleton {
+    @apply relative overflow-hidden rounded-md bg-muted;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent;
+    background-size: 200% 100%;
+  }
+
+  /* Pulse ring (gelen yolculuk talebi için) */
+  .pulse-ring {
+    @apply pointer-events-none absolute inset-0 rounded-full;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.5);
+  }
+}
+
+@layer utilities {
+  .ease-smooth {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
