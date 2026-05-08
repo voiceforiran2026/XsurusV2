@@ -1,0 +1,207 @@
+// X — Sürüş & Gönderim
+//
+// NOT: SQLite Prisma'da `enum` desteklemediği için tüm enum-benzeri alanlar
+// String + TypeScript literal type olarak tutulur (src/types/domain.ts).
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String            @id @default(cuid())
+  email         String            @unique
+  passwordHash  String
+  fullName      String
+  phone         String?
+  role          String // 'ADMIN' | 'RIDER' | 'DRIVER'
+  language      String            @default("tr")
+  avatarUrl     String?
+  createdAt     DateTime          @default(now())
+
+  driverProfile DriverProfile?
+  riderProfile  RiderProfile?
+  riderRides    Ride[]            @relation("rider")
+  driverRides   Ride[]            @relation("driver")
+  cards         PaymentCard[]
+  chipBalance   ChipBalance?
+  chipTxs       ChipTransaction[]
+  notifications Notification[]
+  chatMessages  ChatMessage[]     @relation("chatSender")
+  ratingsGiven  RideRating[]      @relation("rater")
+  ratingsGot    RideRating[]      @relation("ratee")
+}
+
+model DriverProfile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id])
+  vehicleModel  String
+  plateNumber   String
+  rating        Float    @default(5.0)
+  isOnline      Boolean  @default(false)
+  totalEarnings Float    @default(0)
+  unpaidBalance Float    @default(0)
+  paidBalance   Float    @default(0)
+  totalRides    Int      @default(0)
+  currentLat    Float?
+  currentLng    Float?
+  lastSeenAt    DateTime @default(now())
+}
+
+model RiderProfile {
+  id         String @id @default(cuid())
+  userId     String @unique
+  user       User   @relation(fields: [userId], references: [id])
+  totalRides Int    @default(0)
+  totalSpent Float  @default(0)
+  rating     Float  @default(5.0)
+}
+
+model Ride {
+  id               String    @id @default(cuid())
+  serviceType      String // 'RIDE' | 'GO'
+  status           String    @default("PENDING") // RideStatus
+  riderId          String
+  rider            User      @relation("rider", fields: [riderId], references: [id])
+  driverId         String?
+  driver           User?     @relation("driver", fields: [driverId], references: [id])
+  pickupAddress    String
+  pickupLat        Float
+  pickupLng        Float
+  dropoffAddress   String
+  dropoffLat       Float
+  dropoffLng       Float
+  distanceKm       Float
+  estimatedFare    Float
+  finalFare        Float?
+  driverEarning    Float?
+  systemCommission Float?
+  chipReward       Float?
+  paymentMethod    String    @default("CARD") // PaymentMethod
+  requestedAt      DateTime  @default(now())
+  acceptedAt       DateTime?
+  startedAt        DateTime?
+  completedAt      DateTime?
+  cancelledAt      DateTime?
+  cancelReason     String?
+  rating           Int?
+  // Live driver position during active ride (ACCEPTED / IN_PROGRESS)
+  driverLat        Float?
+  driverLng        Float?
+  lastLocationAt   DateTime?
+
+  chatMessages     ChatMessage[]
+  ratings          RideRating[]
+
+  @@index([status])
+  @@index([riderId])
+  @@index([driverId])
+  @@index([requestedAt])
+}
+
+model PaymentCard {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  cardholderName String
+  last4          String
+  brand          String
+  expiryMonth    Int
+  expiryYear     Int
+  isDefault      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  @@index([userId])
+}
+
+model ChipBalance {
+  id             String @id @default(cuid())
+  userId         String @unique
+  user           User   @relation(fields: [userId], references: [id])
+  balance        Float  @default(0)
+  lifetimeEarned Float  @default(0)
+  lifetimeSpent  Float  @default(0)
+}
+
+model ChipTransaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  amount      Float
+  type        String // ChipTxType
+  rideId      String?
+  description String
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model PoolLedger {
+  id          String   @id @default(cuid())
+  type        String // LedgerType
+  amount      Float
+  rideId      String?
+  driverId    String?
+  description String
+  createdAt   DateTime @default(now())
+
+  @@index([type])
+  @@index([createdAt])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  title     String
+  body      String
+  data      String? // JSON
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}
+
+model AppSetting {
+  key   String @id
+  value String
+}
+
+// Yolcu ↔ sürücü mesajlaşması (ride'a scope'lanır).
+model ChatMessage {
+  id        String    @id @default(cuid())
+  rideId    String
+  ride      Ride      @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User      @relation("chatSender", fields: [senderId], references: [id])
+  body      String
+  sentAt    DateTime  @default(now())
+  readAt    DateTime?
+
+  @@index([rideId, sentAt])
+  @@index([senderId])
+}
+
+// Yolculuk sonrası karşılıklı puanlama (her ride için raterId,rateeId çifti unique).
+model RideRating {
+  id        String   @id @default(cuid())
+  rideId    String
+  ride      Ride     @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  raterId   String
+  rater     User     @relation("rater", fields: [raterId], references: [id])
+  rateeId   String
+  ratee     User     @relation("ratee", fields: [rateeId], references: [id])
+  score     Int // 1-5
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@unique([rideId, raterId])
+  @@index([rateeId])
+}

@@ -1,0 +1,157 @@
+================================================================
+GITHUB'A YUKLEME REHBERI -- BU KLASORDEKI HER SEY HAZIR
+================================================================
+
+Toplam: 212 dosya. GitHub web upload tek seferde max 100 dosya
+kabul ediyor, o yuzden gruplar halinde surukleyeceksin.
+
+================================================================
+ONEMLI: GIZLI DOSYALARI GORUNUR YAP
+================================================================
+
+3 kritik dosya nokta ile basliyor (Windows gizli kabul ediyor):
+  .gitignore
+  .env.example
+  .eslintrc.json
+
+Bu dosyalar olmadan Vercel build BOZULABILIR.
+
+File Explorer'da goster:
+  Ust menude "Gorunum" / "View"  ->  "Goster" / "Show"
+  ->  "Gizli ogeler" / "Hidden items"  isaretli olsun.
+
+Veya:  Win+E -> Ctrl+L -> bu klasorun yolunu yapistir
+       -> Ust menu -> Gorunum -> Gizli ogeler
+
+Simdi 3 dosya da gorunecek (acik gri renkte).
+
+================================================================
+YUKLEME -- 3 GRUP HALINDE
+================================================================
+
+Repo: https://github.com/voiceforiran2026/Xsurus
+
+Eger su anda repo'da dosyalar varsa SIL (Settings -> "Delete this
+repository" -> tekrar olustur) veya bu yuklemeyi mevcut ustune
+yap (overwrite olur, problem yok).
+
+----------------------------------------------------------------
+GRUP 1 (yaklasik 32 dosya):
+----------------------------------------------------------------
+
+Bu klasordeki SU OGELERI sec ve surukle:
+  - Tum kok dosyalar (package.json, README.md, vs.)
+  - 3 GIZLI DOSYA: .gitignore, .env.example, .eslintrc.json
+  - prisma klasoru
+  - public klasoru
+  - tests klasoru
+  - scripts klasoru
+  - ekran-goruntusu klasoru
+
+GitHub'da: "Add file" -> "Upload files" -> hepsini surukle ->
+"Commit changes"
+
+----------------------------------------------------------------
+GRUP 2 (yaklasik 98 dosya):
+----------------------------------------------------------------
+
+Sadece "src" klasorune git (cift tikla).
+Icindeki SU KLASORLERI sec:
+  - app/
+  - lib/
+  - hooks/
+  - stores/
+  - types/
+  - middleware.ts (dosya)
+
+Repo'ya don, "Add file" -> "Upload files".
+Yukaridaki secili klasor ve dosyayi olduklari gibi surukle.
+GitHub otomatik src/ altina koyacak.
+"Commit changes"
+
+----------------------------------------------------------------
+GRUP 3 (yaklasik 82 dosya):
+----------------------------------------------------------------
+
+Yine "src" klasorune git.
+Sadece "components" klasorunu sec.
+
+Repo'ya don, "Add file" -> "Upload files" -> components klasorunu
+surukle. GitHub src/components olarak ekleyecek (zaten src
+klasoru var, icine merge eder).
+"Commit changes"
+
+================================================================
+KONTROL: REPO'DA SU GORULMELI
+================================================================
+
+GORULMELI:
+  src/ (icinde app, components, lib, hooks, stores, types,
+        middleware.ts)
+  prisma, public, scripts, tests, ekran-goruntusu
+  package.json, package-lock.json, README.md, PLAN.md
+  next.config.mjs, tailwind.config.ts, tsconfig.json,
+  postcss.config.mjs, playwright.config.ts, vitest.config.ts
+  x-surus-uygulama-kimligi.jpeg
+  .gitignore, .env.example, .eslintrc.json  (gizliler)
+
+GORULMEMELI:
+  node_modules, .next, .env, .env.local, dev.db, .claude
+
+================================================================
+SONRAKI ADIM: VERCEL'A BAGLA
+================================================================
+
+1. https://vercel.com/new
+2. "Import Git Repository" -> Xsurus repo'sunu sec
+3. Project Settings'e geldiginde:
+   Framework Preset:   Next.js (otomatik)
+   Build Command:      npm run vercel-build
+                       (override: package.json'da hazir)
+4. "Environment Variables" bolumunu ac, su 4'u ekle
+   (her biri icin Production + Preview + Development isaretli):
+
+   --- Anahtar -----------+ Deger ----------------------------
+   DATABASE_URL           | file:./dev.db
+   SESSION_PASSWORD       | R2tlHJtNsr3WVkD69Bd0t2lT5C8V7aNknjvEIFOlK-gGqhV5k4Iku2TEbMsMUFEr
+   NEXT_PUBLIC_DEMO_MODE  | true
+   GOOGLE_PLACES_KEY      | (bos birak)
+   ----------------------+-----------------------------------
+
+5. "Deploy" butonuna bas. 2-3 dakika sur, basarili olmali.
+
+================================================================
+DEPLOY SONRASI
+================================================================
+
+URL: vercel sana otomatik bir URL verir
+     (ornek: x-surus-xxx.vercel.app)
+
+Hesaplar:
+  Admin:    admin@x.com   / admin123
+  Yolcu:    yolcu@x.com   / yolcu123
+  Surucu:   surucu@x.com  / surucu123
+
+ALAN ADI BAGLAMA:
+1. Vercel projesi -> Settings -> Domains -> "Add"
+2. olceryazilim.com  (sonra www.olceryazilim.com)
+3. Vercel sana DNS kayitlarini gosterir
+4. Mevcut Plesk panelinden DNS kayitlarini Vercel'inkilerle
+   degistir
+5. 5-30 dakika icinde olceryazilim.com Vercel'a yonlenir
+
+================================================================
+GUVENLIK -- ACIL
+================================================================
+
+Bu sohbette su 3 gizli bilgiyi paylasmistin:
+  - Plesk FTP/RDP sifresi:   Hx&5hc~unx7fHD9y
+  - Eski Google Places key:  AIzaSyD4tybtxZopcTJIcfNq_bTrk9QHoXsWJZE
+  - Eski SESSION_PASSWORD:   k7Qx2mP9vN4wL8jR3tF6yH1aB5cD0eG7iU2oZ9sX4nM8qV
+
+UCUNU DE BUGUN DEGISTIR/IPTAL ET:
+  1. Plesk panelinde "Sistem kullanici sifresi" -> yeni sifre uret
+  2. Google Cloud Console -> APIs & Services -> Credentials ->
+     eski anahtari sil, yenisini olustur (Vercel env'e koy)
+  3. Yeni SESSION_PASSWORD zaten yukarida hazir
+     (R2tlHJtNs...) -- sadece bunu kullan
