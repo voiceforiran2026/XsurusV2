@@ -40,7 +40,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <AuthBootstrap />
         {children}
-        {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && <DemoQuickSwitch />}
+        {process.env.NEXT_PUBLIC_DEMO_MODE !== 'false' && <DemoQuickSwitch />}
       </body>
     </html>
   );
