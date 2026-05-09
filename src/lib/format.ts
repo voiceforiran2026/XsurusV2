@@ -21,6 +21,15 @@ export function formatTL(amount: number): string {
   return tlFormatter.format(Math.round(amount * 100) / 100);
 }
 
+export function formatTLCompact(amount: number): string {
+  const abs = Math.abs(amount);
+  const sign = amount < 0 ? '-' : '';
+  if (abs >= 1_000_000_000) return `${sign}₺${decimalFormatter.format(abs / 1_000_000_000)} Mr`;
+  if (abs >= 1_000_000) return `${sign}₺${decimalFormatter.format(abs / 1_000_000)} Mn`;
+  if (abs >= 10_000) return `${sign}₺${numberFormatter.format(Math.round(abs / 1_000))} B`;
+  return tlFormatter.format(Math.round(amount * 100) / 100);
+}
+
 export function formatNumber(n: number): string {
   return numberFormatter.format(n);
 }

@@ -1,0 +1,97 @@
+================================================================
+GITHUB GUNCELLEME REHBERI -- 22 dosya
+================================================================
+
+Bu klasor sadece DEGISTIRILEN/YENI dosyalari icerir. Eski upload'a
+dokunmana gerek yok -- bu dosyalar GitHub'da uzerine yazilacak.
+
+================================================================
+NE DEGISTI? (kisa ozet)
+================================================================
+
+[YENI] src/components/marketing/PageHeroBackdrop.tsx
+[YENI] src/components/ride/PendingRatingPrompt.tsx
+
+[GUNCEL]
+- src/lib/format.ts          : formatTLCompact (1.1 Mn vs 1.148.989,72)
+- src/lib/pricing.ts         : 4x tarife (taban 100, perKm 48)
+- src/lib/db.ts              : Vercel /tmp kopyalama
+- src/components/admin/charts/RevenueDonut.tsx : donut taşma fix
+- src/components/driver/ActiveDriverRide.tsx   : Google Maps butonu + polling fix
+- src/components/driver/IncomingRideModal.tsx  : modal sığma + grid-cols-1 fix
+- src/components/ride/ActiveRidePanel.tsx      : rating dialog effect split + polling fix
+- src/components/marketing/CityBackdrop.tsx    : Unsplash şehir resmi
+- src/components/marketing/AppDownloadSection.tsx : Unsplash spor araba
+- src/app/(rider)/yolcu/page.tsx               : pending rating prompt server query
+- src/app/hizmetler/page.tsx                   : Unsplash sarı Mercedes
+- src/app/kariyer/page.tsx                     : Unsplash ekip
+- src/app/kurumsal/page.tsx                    : Unsplash ofis
+- src/app/nasil-calisir/page.tsx               : Unsplash telefon
+- src/app/yardim/page.tsx                      : Unsplash el sıkışma
+- tests/unit/pricing.test.ts                   : 4x tarife için test guncelleme
+- prisma/schema.prisma                         : binaryTargets (Vercel)
+- next.config.mjs                              : outputFileTracingIncludes
+- package.json                                 : vercel-build script
+- README.md                                    : Vercel deploy bolumu
+
+
+================================================================
+NASIL YUKLENIR?
+================================================================
+
+Repo: https://github.com/voiceforiran2026/XsurusV2
+
+YONTEM 1 -- TEK SEFERDE (TUM KLASORU SURUKLE)
+----------------------------------------------------------------
+
+22 dosya = 100 limitin altinda, tek seferde gider.
+
+1. https://github.com/voiceforiran2026/XsurusV2 sayfasinda:
+2. "Add file" -> "Upload files" tikla
+3. File Explorer'da bu klasoru ac:
+   C:\Users\Ali\Desktop\GUNCELLEME
+4. Bu klasorun ICINDEKI HER SEYI sec (Ctrl+A) -- AMA "_OKU-..." dosyasini
+   secme veya secersen sonradan repo'dan sil
+5. Tum klasor/dosyalari upload alanina SURUKLE
+6. Asagida commit message yaz: "guncelle: pricing 4x, modal fix, rating dialog, fotograflar"
+7. "Commit changes" tikla
+
+GitHub mevcut dosyalarin uzerine yazar. Yeni dosyalari (PageHeroBackdrop,
+PendingRatingPrompt) yeni olarak ekler.
+
+
+YONTEM 2 -- KESIN OLSUN ISTERSEN HER DOSYAYI TEK TEK
+----------------------------------------------------------------
+
+Sadece bir dosya degistirmek icin:
+1. GitHub'da o dosyaya git (orn: src/lib/pricing.ts)
+2. Sag ustte kalem ikonu "Edit this file"
+3. Bu klasordeki ayni dosyayi text editor'le ac, kopyala
+4. GitHub'da icerigi sil, yapistir, "Commit changes"
+
+Ama 22 dosya icin uzun surer -- YONTEM 1 onerilir.
+
+
+================================================================
+SONRA -- VERCEL OTOMATIK REDEPLOY
+================================================================
+
+GitHub'a push olunca Vercel otomatik build baslatir.
+Build Logs takip et: https://vercel.com/alis-projects-bbe0f03e/xsurus-v2
+
+Build basarili olursa demo URL guncellenir:
+  - 4x pricing
+  - Modal duzgun gorunur
+  - Rating dialog hem /yolcu/arama hem /yolcu home'da acilir
+  - Tum sayfalar arka plan fotolari ile
+  - Google Maps butonu surucu paneline geldi
+
+
+================================================================
+ENV VARS (Vercel'da zaten var, dokunma)
+================================================================
+
+DATABASE_URL          = file:./dev.db
+SESSION_PASSWORD      = R2tlHJtNsr3WVkD69Bd0t2lT5C8V7aNknjvEIFOlK-gGqhV5k4Iku2TEbMsMUFEr
+NEXT_PUBLIC_DEMO_MODE = true
+GOOGLE_PLACES_KEY     = AIzaSyD4tybtxZopcTJIcfNq_bTrk9QHoXsWJZE

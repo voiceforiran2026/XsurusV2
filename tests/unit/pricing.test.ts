@@ -9,12 +9,12 @@ import {
 
 describe('Faz 3 — pricing', () => {
   describe('calculateFare', () => {
-    it('RIDE: 0 km → 25 ₺ taban', () => {
-      expect(calculateFare('RIDE', 0)).toBe(25);
+    it('RIDE: 0 km → 100 ₺ taban', () => {
+      expect(calculateFare('RIDE', 0)).toBe(100);
     });
 
-    it('RIDE: 5 km → 25 + 5×12 = 85 ₺', () => {
-      expect(calculateFare('RIDE', 5)).toBe(85);
+    it('RIDE: 5 km → 100 + 5×48 = 340 ₺', () => {
+      expect(calculateFare('RIDE', 5)).toBe(340);
     });
 
     it('GO: aynı tarife (RIDE ile birebir)', () => {
@@ -22,8 +22,8 @@ describe('Faz 3 — pricing', () => {
     });
 
     it('Ondalıklı mesafe → 2 ondalığa yuvarlanır', () => {
-      // 25 + 3.7×12 = 25 + 44.4 = 69.4
-      expect(calculateFare('RIDE', 3.7)).toBe(69.4);
+      // 100 + 3.7×48 = 100 + 177.6 = 277.6
+      expect(calculateFare('RIDE', 3.7)).toBe(277.6);
     });
 
     it('Negatif mesafe → hata', () => {
@@ -52,7 +52,7 @@ describe('Faz 3 — pricing', () => {
 
     it('Toplam invariant: 100 farklı ücrette tutarlı', () => {
       for (let i = 1; i <= 100; i++) {
-        const fare = roundTL(25 + i * 1.37);
+        const fare = roundTL(100 + i * 1.37);
         const r = settleRide(fare);
         const total = roundTL(
           r.driverEarning + r.systemCommission + r.chipReward,

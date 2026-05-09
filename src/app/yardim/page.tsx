@@ -8,6 +8,7 @@ import {
 import { AppShell } from '@/components/layout/AppShell';
 import { FaqAccordion, type FaqItem } from '@/components/marketing/FaqAccordion';
 import { SectionReveal } from '@/components/marketing/SectionReveal';
+import { PageHeroBackdrop } from '@/components/marketing/PageHeroBackdrop';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -74,17 +75,18 @@ const CONTACT = [
 
 export default function YardimPage() {
   return (
-    <AppShell>
-      <section className="bg-background pt-16 pb-12">
-        <div className="container-wide max-w-3xl text-center">
+    <AppShell navVariant="dark">
+      <section className="relative bg-canvas text-white pt-16 pb-12 overflow-hidden">
+        <PageHeroBackdrop src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1920&q=80&auto=format&fit=crop" />
+        <div className="container-wide max-w-3xl text-center relative">
           <SectionReveal>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-white/50 mb-3">
               Yardım Merkezi
             </p>
             <h1 className="heading-display text-4xl md:text-6xl font-bold text-balance">
               Yardım Merkezi
             </h1>
-            <p className="mt-5 text-base md:text-lg text-muted-foreground">
+            <p className="mt-5 text-base md:text-lg text-white/70">
               Sıkça sorulan sorulara hızlı yanıtlar ve canlı destek.
             </p>
           </SectionReveal>

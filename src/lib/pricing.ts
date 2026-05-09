@@ -1,7 +1,7 @@
 // Saf fiyatlandırma fonksiyonları — yan etki yok, test edilebilir.
 //
-// Onaylanan kararlar (2026-05-06):
-//   - RIDE ve GO **aynı**: 25 ₺ taban + 12 ₺/km
+// Onaylanan kararlar (2026-05-09):
+//   - RIDE ve GO **aynı**: 100 ₺ taban + 48 ₺/km (4x revize)
 //   - Dağılım: %75 sürücü + %15 sistem + %10 chip = %100
 //   - 1 chip = 1 ₺
 //
@@ -13,8 +13,8 @@
 import type { ServiceType } from '@/types/domain';
 
 export const PRICING_CONFIG = {
-  RIDE: { base: 25, perKm: 12 },
-  GO: { base: 25, perKm: 12 },
+  RIDE: { base: 100, perKm: 48 },
+  GO: { base: 100, perKm: 48 },
   driverShare: 0.75,
   systemCommission: 0.15,
   chipReward: 0.1,

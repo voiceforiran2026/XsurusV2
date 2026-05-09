@@ -3,6 +3,7 @@ import { AppShell } from '@/components/layout/AppShell';
 import { ServicesSection } from '@/components/marketing/ServicesSection';
 import { HowItWorksSection } from '@/components/marketing/HowItWorksSection';
 import { SectionReveal } from '@/components/marketing/SectionReveal';
+import { PageHeroBackdrop } from '@/components/marketing/PageHeroBackdrop';
 
 export const metadata: Metadata = {
   title: 'Hizmetler',
@@ -12,8 +13,9 @@ export const metadata: Metadata = {
 export default function HizmetlerPage() {
   return (
     <AppShell navVariant="dark">
-      <section className="bg-canvas text-white pt-16 pb-20">
-        <div className="container-wide max-w-3xl text-center">
+      <section className="relative bg-canvas text-white pt-16 pb-20 overflow-hidden">
+        <PageHeroBackdrop src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=1920&q=80&auto=format&fit=crop" />
+        <div className="container-wide max-w-3xl text-center relative">
           <SectionReveal>
             <p className="text-xs font-semibold uppercase tracking-wider text-white/50 mb-3">
               Hizmetlerimiz

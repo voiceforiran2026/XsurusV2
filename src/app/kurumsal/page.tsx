@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { AppShell } from '@/components/layout/AppShell';
 import { SectionReveal } from '@/components/marketing/SectionReveal';
+import { PageHeroBackdrop } from '@/components/marketing/PageHeroBackdrop';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -42,17 +43,18 @@ const FEATURES = [
 
 export default function KurumsalPage() {
   return (
-    <AppShell>
-      <section className="bg-background pt-16 pb-12">
-        <div className="container-wide max-w-3xl text-center">
+    <AppShell navVariant="dark">
+      <section className="relative bg-canvas text-white pt-16 pb-12 overflow-hidden">
+        <PageHeroBackdrop src="https://images.unsplash.com/photo-1564069114553-7215e1ff1890?w=1920&q=80&auto=format&fit=crop" />
+        <div className="container-wide max-w-3xl text-center relative">
           <SectionReveal>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-white/50 mb-3">
               Kurumsal
             </p>
             <h1 className="heading-display text-4xl md:text-6xl font-bold text-balance">
               İşinizi büyütecek<br />kurumsal çözümler
             </h1>
-            <p className="mt-5 text-base md:text-lg text-muted-foreground">
+            <p className="mt-5 text-base md:text-lg text-white/70">
               Şirketinizin yolculuk ve gönderim ihtiyaçları için tek noktadan
               yönetilen profesyonel çözümler.
             </p>

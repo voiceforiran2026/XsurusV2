@@ -69,20 +69,21 @@ export function IncomingRideModal() {
     >
       <DialogContent
         showCloseButton={false}
-        className="w-[calc(100%-1rem)] max-w-[360px] sm:max-w-md p-0 overflow-hidden gap-0"
+        className="p-0 overflow-hidden gap-0 rounded-2xl grid-cols-1"
+        style={{ width: 'min(360px, calc(100% - 16px))', maxWidth: '360px' }}
       >
         {/* Üst pulse-ring vurgu */}
-        <div className="relative bg-canvas text-white px-4 pt-5 pb-4 sm:px-5 sm:pt-6 sm:pb-5">
+        <div className="relative bg-canvas text-white px-4 pt-5 pb-4">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.06),_transparent_60%)]" />
           <div className="relative flex items-start justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white text-canvas shrink-0">
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white text-canvas shrink-0">
                 <Icon className="h-4 w-4" />
                 <span className="absolute inset-0 rounded-full bg-white/30 animate-pulse-ring" />
               </div>
               <div className="min-w-0 flex-1">
-                <DialogTitle className="text-sm sm:text-base text-white font-semibold truncate">
-                  Yeni {offer.serviceType === 'GO' ? 'Gönderi' : 'Yolculuk'} Talebi
+                <DialogTitle className="text-base text-white font-semibold truncate leading-tight">
+                  Yeni {offer.serviceType === 'GO' ? 'Gönderi' : 'Yolculuk'}
                 </DialogTitle>
                 <DialogDescription className="text-[11px] text-white/60 mt-0.5 truncate">
                   {formatRelative(offer.requestedAt)} ·{' '}
@@ -101,7 +102,7 @@ export function IncomingRideModal() {
             </button>
           </div>
 
-          <div className="relative mt-4 grid grid-cols-3 gap-1.5 sm:gap-2 text-center">
+          <div className="relative mt-4 grid grid-cols-3 gap-1.5 text-center">
             <Stat
               icon={RouteIcon}
               label="Mesafe"
@@ -121,8 +122,8 @@ export function IncomingRideModal() {
           </div>
         </div>
 
-        <div className="px-4 py-4 sm:px-5 sm:py-5 space-y-3.5">
-          <div className="space-y-2.5">
+        <div className="px-4 py-4 space-y-3.5">
+          <div className="space-y-3">
             <RouteRow
               icon={
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-foreground text-background">
@@ -152,16 +153,16 @@ export function IncomingRideModal() {
           <div className="flex items-center gap-2 pt-1">
             <Button
               variant="outline"
-              size="lg"
-              className="flex-1 px-2 text-sm"
+              size="default"
+              className="flex-1 px-2 text-sm h-11"
               onClick={onDecline}
               disabled={accepting}
             >
               Pas Geç
             </Button>
             <Button
-              size="lg"
-              className="flex-1 px-2 text-sm"
+              size="default"
+              className="flex-1 px-2 text-sm h-11 gap-1.5"
               onClick={onAccept}
               disabled={accepting}
             >
@@ -171,7 +172,7 @@ export function IncomingRideModal() {
                 <Check className="h-4 w-4" />
               )}
               <span className="truncate">
-                {accepting ? 'Onaylanıyor…' : 'Onayla'}
+                {accepting ? 'Onaylanıyor' : 'Onayla'}
               </span>
             </Button>
           </div>
@@ -198,14 +199,14 @@ function Stat({
         highlight
           ? 'border-white/20 bg-white/10'
           : 'border-white/10 bg-white/5'
-      } px-1.5 py-2`}
+      } px-1.5 py-2.5`}
     >
       <div className="text-white/50 text-[9px] uppercase tracking-wider font-semibold flex items-center gap-0.5 justify-center">
         <Icon className="h-2.5 w-2.5 shrink-0" />
         <span className="truncate">{label}</span>
       </div>
       <div
-        className={`text-[13px] sm:text-sm font-bold mt-1 truncate tabular-nums ${
+        className={`text-[12px] font-bold mt-1 truncate tabular-nums ${
           highlight ? 'text-white' : 'text-white/90'
         }`}
       >
@@ -231,7 +232,7 @@ function RouteRow({
         <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
           {label}
         </p>
-        <p className="text-xs sm:text-sm truncate">{value}</p>
+        <p className="text-xs leading-snug break-words">{value}</p>
       </div>
     </div>
   );

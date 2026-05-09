@@ -1,8 +1,22 @@
-// Hero arka planı için CSS-only şehir silüeti + ışık efektleri
-// Görsel asset gerektirmez, mobilde de hafif kalır.
+import Image from 'next/image';
+
+// Hero arka planı: gerçek gece-şehir fotoğrafı + dark overlay ile okunabilirlik
+// Görsel CSS efektleri (ışık halkaları, grid, silüet) overlay olarak korunur.
 export function CityBackdrop() {
   return (
     <div aria-hidden className="absolute inset-0 overflow-hidden">
+      {/* Gerçek arka plan fotoğrafı — Unsplash modern şehir caddesi trafik */}
+      <Image
+        src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1920&q=80&auto=format&fit=crop"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover opacity-50"
+      />
+      {/* Karanlık degrade — metnin okunması için */}
+      <div className="absolute inset-0 bg-gradient-to-b from-canvas/85 via-canvas/70 to-canvas/95" />
+
       {/* Üst sağ ışık */}
       <div className="absolute -top-32 -right-32 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,_rgba(255,255,255,0.08)_0%,_transparent_60%)]" />
       {/* Alt sol ışık */}

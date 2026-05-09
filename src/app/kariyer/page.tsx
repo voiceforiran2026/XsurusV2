@@ -11,6 +11,7 @@ import {
 import Link from 'next/link';
 import { AppShell } from '@/components/layout/AppShell';
 import { SectionReveal } from '@/components/marketing/SectionReveal';
+import { PageHeroBackdrop } from '@/components/marketing/PageHeroBackdrop';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -67,18 +68,19 @@ const POSITIONS = [
 
 export default function KariyerPage() {
   return (
-    <AppShell>
-      <section className="bg-background pt-16 pb-12">
-        <div className="container-wide grid lg:grid-cols-2 gap-12 items-center">
+    <AppShell navVariant="dark">
+      <section className="relative bg-canvas text-white pt-16 pb-12 overflow-hidden">
+        <PageHeroBackdrop src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1920&q=80&auto=format&fit=crop" />
+        <div className="container-wide grid lg:grid-cols-2 gap-12 items-center relative">
           <div>
             <SectionReveal>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-white/50 mb-3">
                 Kariyer
               </p>
               <h1 className="heading-display text-4xl md:text-6xl font-bold text-balance">
                 X'te Kariyer
               </h1>
-              <p className="mt-5 text-base md:text-lg text-muted-foreground max-w-xl">
+              <p className="mt-5 text-base md:text-lg text-white/70 max-w-xl">
                 Büyüyen ekibimize katıl, geleceği birlikte şekillendirelim.
               </p>
             </SectionReveal>

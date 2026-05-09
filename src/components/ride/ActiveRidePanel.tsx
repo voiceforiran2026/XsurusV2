@@ -99,15 +99,14 @@ export function ActiveRidePanel({ initial }: { initial: RideDetail }) {
     }
   }, [authErrored, router]);
 
-  // Polling sadece BroadcastChannel yoksa devreye girer.
-  // BroadcastChannel desteklendiğinde aşağıdaki useBroadcastEvent
-  // 100ms içinde refresh tetikler — interval'a gerek kalmaz.
+  // Polling — broadcast varsa hızlı yol, yoksa 3sn fallback.
+  // BroadcastChannel incognito/farklı cihaz/farklı browser arasında çalışmaz,
+  // o yüzden polling her zaman safety net olarak çalışır.
   React.useEffect(() => {
     if (
       authErrored ||
       ride.status === 'COMPLETED' ||
-      ride.status === 'CANCELLED' ||
-      isBroadcastSupported()
+      ride.status === 'CANCELLED'
     ) {
       return;
     }
@@ -190,44 +189,49 @@ export function ActiveRidePanel({ initial }: { initial: RideDetail }) {
     void refresh();
   };
 
+  // Chip burst — chipReward null'dan değere döndüğünde tetiklenir.
   React.useEffect(() => {
-    if (ride.status === 'COMPLETED') {
-      // İlk kez COMPLETED olduğunda chip burst göster
-      if (!burstShownRef.current && (ride.chipReward ?? 0) > 0) {
-        burstShownRef.current = true;
-        setShowBurst(true);
-      }
-      // Burst animasyonu sonrası rating modal'ını aç — ama sadece bu kullanıcı
-      // daha önce puanlamamışsa. Sayfa refresh sonrası tekrar açılmasın.
-      if (!ratingShownRef.current) {
-        ratingShownRef.current = true;
-        let cancelled = false;
-        const t = setTimeout(async () => {
-          if (cancelled) return;
-          try {
-            const res = await fetch(`/api/rides/${ride.id}/rating`, { cache: 'no-store' });
-            if (res.ok) {
-              const data = await res.json();
-              if (!data.rated) setRatingOpen(true);
-            }
-          } catch {
-            // sessizce yut
+    if (ride.status !== 'COMPLETED') return;
+    if (burstShownRef.current) return;
+    if ((ride.chipReward ?? 0) <= 0) return;
+    burstShownRef.current = true;
+    setShowBurst(true);
+  }, [ride.status, ride.chipReward]);
+
+  // Rating dialog — sadece status'a bağlı, chipReward dep değil ki
+  // chipReward null->değer geçişi cleanup ile timeout'u iptal etmesin.
+  React.useEffect(() => {
+    if (ride.status !== 'COMPLETED') return;
+    if (ratingShownRef.current) return;
+    let cancelled = false;
+    const t = setTimeout(async () => {
+      if (cancelled) return;
+      try {
+        const res = await fetch(`/api/rides/${ride.id}/rating`, { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (!data.rated) {
+            ratingShownRef.current = true;
+            setRatingOpen(true);
           }
-        }, 2000);
-        return () => {
-          cancelled = true;
-          clearTimeout(t);
-        };
+        }
+      } catch {
+        // sessizce yut
       }
-      return;
-    }
-    if (ride.status === 'CANCELLED') {
-      // Chat drawer açıksa kapat
-      setChatOpen(false);
-      const t = setTimeout(() => router.push('/yolcu'), 900);
-      return () => clearTimeout(t);
-    }
-  }, [ride.status, ride.chipReward, ride.id, router]);
+    }, 2000);
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
+  }, [ride.status, ride.id]);
+
+  // CANCELLED -> ana sayfaya dön.
+  React.useEffect(() => {
+    if (ride.status !== 'CANCELLED') return;
+    setChatOpen(false);
+    const t = setTimeout(() => router.push('/yolcu'), 900);
+    return () => clearTimeout(t);
+  }, [ride.status, router]);
 
   const mapPhase: LiveMapPhase =
     ride.status === 'ACCEPTED' || ride.status === 'EN_ROUTE_TO_PICKUP'
@@ -424,12 +428,31 @@ export function ActiveRidePanel({ initial }: { initial: RideDetail }) {
       )}
 
       {ride.status === 'COMPLETED' && (
-        <Card className="p-5 bg-canvas text-white border-canvas text-center">
-          <div className="mb-2 text-2xl">🎉</div>
-          <p className="font-semibold mb-1">Yolculuk tamamlandı</p>
-          <p className="text-xs text-white/70">
-            Birazdan ana sayfaya yönlendirileceksiniz.
-          </p>
+        <Card className="p-5 bg-canvas text-white border-canvas text-center space-y-3">
+          <div>
+            <div className="mb-1 text-2xl">🎉</div>
+            <p className="font-semibold">Yolculuk tamamlandı</p>
+            {ride.driver?.fullName && (
+              <p className="text-xs text-white/70 mt-1">
+                {ride.driver.fullName} ile yolculuğunuzu değerlendirin
+              </p>
+            )}
+          </div>
+          <Button
+            size="lg"
+            className="w-full bg-white text-canvas hover:bg-white/90"
+            onClick={() => setRatingOpen(true)}
+          >
+            <Star className="h-4 w-4" />
+            Şoförü Değerlendir
+          </Button>
+          <button
+            type="button"
+            className="text-xs text-white/60 hover:text-white/80 underline-offset-2 hover:underline"
+            onClick={() => router.push('/yolcu')}
+          >
+            Atla ve ana sayfaya dön
+          </button>
         </Card>
       )}
 

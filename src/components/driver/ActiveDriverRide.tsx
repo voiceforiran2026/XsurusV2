@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Maximize2,
+  Navigation,
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -92,13 +93,12 @@ export function ActiveDriverRide({ initial }: { initial: DriverRideDetail }) {
     }
   }, [authErrored, router]);
 
-  // Polling sadece BroadcastChannel yoksa.
+  // Polling — broadcast hızlı yol, yoksa 3sn fallback (incognito/cihazlar arası).
   React.useEffect(() => {
     if (
       authErrored ||
       ride.status === 'COMPLETED' ||
-      ride.status === 'CANCELLED' ||
-      isBroadcastSupported()
+      ride.status === 'CANCELLED'
     )
       return;
     const t = setInterval(refresh, POLL_MS);
@@ -233,6 +233,37 @@ export function ActiveDriverRide({ initial }: { initial: DriverRideDetail }) {
     ride.finalFare ?? ride.estimatedFare,
   ).driverEarning;
 
+  const isToPickupPhase =
+    ride.status === 'ACCEPTED' || ride.status === 'EN_ROUTE_TO_PICKUP';
+  const isInProgressPhase = ride.status === 'IN_PROGRESS';
+
+  const googleMapsUrl = React.useMemo(() => {
+    if (!isToPickupPhase && !isInProgressPhase) return null;
+    const dest = isToPickupPhase
+      ? `${ride.pickupLat},${ride.pickupLng}`
+      : `${ride.dropoffLat},${ride.dropoffLng}`;
+    const origin = isToPickupPhase
+      ? driverPos
+        ? `${driverPos.lat},${driverPos.lng}`
+        : null
+      : `${ride.pickupLat},${ride.pickupLng}`;
+    const params = new URLSearchParams({
+      api: '1',
+      destination: dest,
+      travelmode: 'driving',
+    });
+    if (origin) params.set('origin', origin);
+    return `https://www.google.com/maps/dir/?${params.toString()}`;
+  }, [
+    isToPickupPhase,
+    isInProgressPhase,
+    driverPos,
+    ride.pickupLat,
+    ride.pickupLng,
+    ride.dropoffLat,
+    ride.dropoffLng,
+  ]);
+
   const mapPhase: LiveMapPhase =
     ride.status === 'ACCEPTED' || ride.status === 'EN_ROUTE_TO_PICKUP'
       ? 'to_pickup'
@@ -359,6 +390,20 @@ export function ActiveDriverRide({ initial }: { initial: DriverRideDetail }) {
           </div>
         </div>
       </Card>
+
+      {googleMapsUrl && (
+        <a
+          href={googleMapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full rounded-xl bg-[#1a73e8] hover:bg-[#1666d4] text-white font-semibold text-sm py-3 px-4 transition-colors shadow-soft"
+        >
+          <Navigation className="h-4 w-4" />
+          {isToPickupPhase
+            ? 'Google Maps ile yolcuya git'
+            : 'Google Maps ile varış noktasına git'}
+        </a>
+      )}
 
       {error && (
         <motion.div

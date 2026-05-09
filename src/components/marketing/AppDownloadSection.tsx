@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Apple, Smartphone, Star } from 'lucide-react';
 import { SectionReveal } from './SectionReveal';
 
@@ -6,6 +7,15 @@ export function AppDownloadSection() {
     <section className="bg-background py-20 md:py-28">
       <div className="container-wide">
         <div className="rounded-2xl bg-canvas text-white p-8 md:p-14 overflow-hidden relative">
+          {/* Arka plan fotoğrafı — Unsplash modern araba garaj */}
+          <Image
+            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1600&q=80&auto=format&fit=crop"
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, 1200px"
+            className="object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-canvas via-canvas/85 to-canvas/60" />
           <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-[radial-gradient(circle,_rgba(255,255,255,0.06)_0%,_transparent_60%)]" />
           <div className="grid md:grid-cols-2 gap-10 items-center relative">
             <SectionReveal>

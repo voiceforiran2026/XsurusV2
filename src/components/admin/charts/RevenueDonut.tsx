@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { Card } from '@/components/ui/card';
-import { formatTL } from '@/lib/format';
+import { formatTL, formatTLCompact } from '@/lib/format';
 
 interface DistDatum {
   key: string;
@@ -52,8 +52,8 @@ export function RevenueDonut({ data }: { data: DistDatum[] }) {
               data={data}
               dataKey="value"
               nameKey="label"
-              innerRadius={50}
-              outerRadius={82}
+              innerRadius={58}
+              outerRadius={84}
               paddingAngle={2}
               stroke="hsl(var(--background))"
               strokeWidth={2}
@@ -74,12 +74,15 @@ export function RevenueDonut({ data }: { data: DistDatum[] }) {
           </PieChart>
         </ResponsiveContainer>
         {/* Merkez total */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+          title={formatTL(total)}
+        >
           <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
             Havuz
           </span>
-          <span className="text-base font-bold tabular-nums">
-            {formatTL(total)}
+          <span className="text-sm font-bold tabular-nums leading-tight">
+            {formatTLCompact(total)}
           </span>
         </div>
       </div>
